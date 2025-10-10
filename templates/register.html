@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Kayıt Ol</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+</head>
+<body>
+  <h1>Kayıt Ol</h1>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="messages">{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="post" action="{{ url_for('register') }}">
+    <div class="input-group">
+      <label for="student_number">Öğrenci Numarası:</label>
+      <input type="text" id="student_number" name="student_number" required>
+    </div>
+
+    <div class="input-group">
+      <label for="name">Ad Soyad:</label>
+      <input type="text" id="name" name="name">
+    </div>
+
+    <div class="input-group">
+      <label for="password">Şifre:</label>
+      <input type="password" id="password" name="password" required>
+    </div>
+
+    <button type="submit">Kayıt Ol</button>
+  </form>
+
+  <p>Zaten hesabın var mı? <a href="{{ url_for('login') }}">Giriş Yap</a></p>
+</body>
+</html>

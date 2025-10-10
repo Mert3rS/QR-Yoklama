@@ -1,0 +1,27 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Yoklama</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='attendance.css') }}">
+</head>
+<body>
+  <h1>Yoklama Formu</h1>
+  <p>Hoşgeldiniz, <strong>{{ name }}</strong></p>
+
+  {% if message %}
+    <div class="attendance-message {% if success %}success{% else %}error{% endif %}">
+      {{ message }}
+    </div>
+  {% endif %}
+
+  {% if not success %}
+    <form method="post">
+      <input type="hidden" name="name" value="{{ name }}">
+      <button type="submit">Yoklama Ver</button>
+    </form>
+  {% endif %}
+
+  <p><a href="{{ url_for('logout') }}">Çıkış Yap</a></p>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* --- Body ve genel tema --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Başlık */
+h1, h2 {
+    color: #2c3e50;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    margin-bottom: 20px;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+h2 {
+    font-size: 1.8rem;
+}
+
+/* Flash mesajlar */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 90%;
+    max-width: 500px;
+}
+
+.messages li {
+    background-color: #ffeb3b;
+    color: #2c3e50;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Form / Buton container */
+form {
+    background-color: rgba(255,255,255,0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.15);
+    max-width: 400px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Yoklama butonu */
+form button {
+    background-color: #3498db;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Toplam yoklama sayısı */
+#count {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #34495e;
+    background-color: rgba(255,255,255,0.8);
+    padding: 12px 25px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Genel paragraf */
+p {
+    text-align: center;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+a {
+    color: #3498db;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+/* --- Yoklama sonucu mesaj --- */
+.attendance-message {
+    font-size: 2rem;              /* Daha büyük yazı */
+    font-weight: 700;
+    padding: 25px 40px;
+    border-radius: 15px;
+    margin-top: 30px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    max-width: 600px;
+    width: 90%;
+    color: white;
+}
+
+/* Başarılı yoklama mesajı */
+.attendance-message.success {
+    background-color: #2ecc71;    /* yeşil tema */
+}
+
+/* Zaten yoklama alınmış mesajı */
+.attendance-message.error {
+    background-color: #e74c3c;    /* kırmızı tema */
+}

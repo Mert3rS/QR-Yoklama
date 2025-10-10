@@ -1,0 +1,124 @@
+/* --- Body ve genel tema --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* dikeyde ortala */
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Başlık */
+h1 {
+    font-size: 2.8rem;
+    color: #2c3e50;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+    margin-bottom: 30px;
+}
+
+/* Flash mesajlar */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+    width: 90%;
+    max-width: 400px;
+}
+
+.messages li {
+    background-color: #ffeb3b;
+    color: #2c3e50;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: 500;
+}
+
+/* Form container */
+form {
+    background-color: rgba(255,255,255,0.95);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0px 10px 25px rgba(0,0,0,0.15);
+    max-width: 500px;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center; /* yatay ortalama */
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+/* Input grupları */
+form .input-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 70%;
+}
+
+form .input-group label {
+    margin-right: 10px;
+    font-size: 1.2rem;
+    color: #2c3e50;
+    font-weight: 600;
+    width: 150px; /* tüm label aynı genişlikte */
+    text-align: right; /* label yazısı sağa yaslı */
+}
+
+form .input-group input {
+    flex: 1;
+    padding: 12px 15px;
+    font-size: 1.1rem;
+    border: 1px solid #bdc3c7;
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+}
+
+form .input-group input:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 8px rgba(52,152,219,0.3);
+}
+
+/* Kayıt butonu */
+form button {
+    background-color: #3498db;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+form button:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Giriş linki */
+p {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 1rem;
+    color: #2c3e50;
+}
+
+p a {
+    color: #3498db;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}

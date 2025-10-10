@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>📋 Yoklama QR Kodu</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
+</head>
+<body>
+  <h1>📋 Yoklama QR Kodu (Tablet)</h1>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class="messages">{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
+    {% endif %}
+  {% endwith %}
+  <div class="links">
+    <a href="{{ url_for('login') }}">Giriş Yap</a>  <a href="{{ url_for('register') }}">Kayıt Ol</a>
+  </div>
+
+  <div class="qr">
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+  </div>
+
+  <p>QR kod tarandığında telefon / tarayıcıda kullanıcı önce giriş yapmamışsa <strong>giriş sayfasına</strong> yönlenir.</p>
+
+  <h2>Toplam Yoklama: <span id="count">{{ count }}</span></h2>
+
+  
+
+  <script>
+    var socket = io();
+    socket.on("update_count", function(data){
+      document.getElementById("count").innerText = data.count;
+    });
+  </script>
+</body>
+</html>
