@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>📊 Öğretmen Paneli</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+  <h1>📊 Öğretmen Dashboard</h1>
+
+  <p class="welcome">Hoş geldiniz, <strong>admin</strong>!</p>
+  <a class="logout-btn" href="{{ url_for('logout') }}">🚪 Çıkış Yap</a>
+
+  <h2>🧾 Yoklama Listesi</h2>
+  <table>
+    <tr>
+      <th>Ad Soyad</th>
+      <th>Saat</th>
+    </tr>
+    {% for y in yoklama_listesi %}
+      <tr>
+        <td>{{ y.isim }}</td>
+        <td>{{ y.zaman }}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+  <br>
+  <a href="{{ url_for('index') }}" class="logout-btn" style="background:#1976d2;">← QR Kod Sayfasına Dön</a>
+</body>
+</html>

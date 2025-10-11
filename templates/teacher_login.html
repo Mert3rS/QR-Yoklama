@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <title>👨‍🏫 Öğretmen Girişi</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+</head>
+<body>
+  <h1>👨‍🏫 Öğretmen Girişi</h1>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="messages">
+        {% for category, msg in messages %}
+          <li class="{{ category }}">{{ msg }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST">
+    <div class="input-group">
+      <label>Kullanıcı Adı:</label>
+      <input type="text" name="username" required>
+    </div>
+
+    <div class="input-group">
+      <label>Şifre:</label>
+      <input type="password" name="password" required>
+    </div>
+
+    <button type="submit">Giriş Yap</button>
+  </form>
+
+  <p><a href="{{ url_for('index') }}">← Ana Sayfaya Dön</a></p>
+</body>
+</html>

@@ -6,7 +6,7 @@ from functools import wraps
 from datetime import date
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_change_this")  # production: gerçek secret koy
+app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_change_this")
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 NGROK_URL = os.environ.get("NGROK_URL", "https://hammeringly-unenquired-coralee.ngrok-free.dev")
@@ -19,11 +19,9 @@ def get_db():
     return conn
 
 def init_db():
-    """Veritabanı tablolarını oluşturur (varsa atlar)."""
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = get_db()
     c = conn.cursor()
-    # students tablosu
     c.execute("""
         CREATE TABLE IF NOT EXISTS students (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +30,6 @@ def init_db():
             password_hash TEXT NOT NULL
         );
     """)
-    # attendance tablosu
     c.execute("""
         CREATE TABLE IF NOT EXISTS attendance (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -45,13 +42,12 @@ def init_db():
     conn.commit()
     conn.close()
 
-# --- uygulama başlatma işlemi ---
 def initialize_app():
     print("🔧 Veritabanı kontrol ediliyor / oluşturuluyor...")
     init_db()
     print("✅ Başlatma tamamlandı!")
 
-# --- decorator ---
+# --- Decoratorlar ---
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -60,7 +56,15 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# --- attendance ekleme (aynı gün birden fazla kaydı engeller) ---
+def teacher_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        if 'teacher' not in session:
+            return redirect(url_for('teacher_login'))
+        return f(*args, **kwargs)
+    return decorated
+
+# --- Yoklama ekleme ---
 def add_attendance(student_id, student_name):
     conn = get_db()
     c = conn.cursor()
@@ -88,21 +92,16 @@ def generate_qr(url):
     img.save(buf, format='PNG')
     return base64.b64encode(buf.getvalue()).decode('utf-8')
 
-# --- public index: QR ve toplam yoklama (sadece login sonrası gösterilir) ---
+# --- Ana Sayfa ---
 @app.route('/')
 def index():
-    if 'user_id' not in session:
-        # login yapılmamışsa login sayfasına yönlendir
-        return redirect(url_for('login'))
-
-    # login yapılmışsa QR kodu ve toplam yoklamayı göster
     qr_base64 = generate_qr(f"{NGROK_URL}/attendance")
     conn = get_db()
     count = conn.execute("SELECT COUNT(*) FROM attendance").fetchone()[0]
     conn.close()
     return render_template("index.html", qr_code=qr_base64, count=count)
 
-# --- register ---
+# --- Öğrenci Kayıt ---
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -130,7 +129,7 @@ def register():
             return redirect(url_for('register'))
     return render_template('register.html')
 
-# --- login ---
+# --- Öğrenci Giriş ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     next_url = request.args.get('next') or url_for('index')
@@ -152,13 +151,51 @@ def login():
         return redirect(url_for('login', next=next_url))
     return render_template('login.html', next=next_url)
 
+# --- Öğretmen Giriş ---
+@app.route('/teacher_login', methods=['GET', 'POST'])
+def teacher_login():
+    if request.method == 'POST':
+        username = request.form.get('username', '').strip()
+        password = request.form.get('password', '').strip()
+
+        if username == "admin" and password == "123":
+            session['teacher'] = True
+            flash("Öğretmen girişi başarılı.")
+            return redirect(url_for('dashboard'))
+        else:
+            flash("Kullanıcı adı veya şifre hatalı.")
+            return redirect(url_for('teacher_login'))
+    return render_template('teacher_login.html')
+
+# --- Dashboard (öğretmen paneli) ---
+@app.route('/dashboard')
+@teacher_required
+def dashboard():
+    conn = get_db()
+    rows = conn.execute("SELECT * FROM attendance ORDER BY timestamp DESC").fetchall()
+    total = len(rows)
+    conn.close()
+    return render_template('dashboard.html', attendances=rows, total=total)
+
+# --- Kayıt Silme ---
+@app.route('/delete_attendance/<int:id>', methods=['POST'])
+@teacher_required
+def delete_attendance(id):
+    conn = get_db()
+    conn.execute("DELETE FROM attendance WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    flash("Yoklama kaydı silindi.")
+    return redirect(url_for('dashboard'))
+
+# --- Çıkış ---
 @app.route('/logout')
 def logout():
     session.clear()
     flash("Çıkış yapıldı.")
     return redirect(url_for('index'))
 
-# --- attendance (sadece girişli öğrenci) ---
+# --- Yoklama ---
 @app.route('/attendance', methods=['GET', 'POST'])
 @login_required
 def attendance():
@@ -182,8 +219,8 @@ def attendance():
         success=success
     )
 
-# --- uygulama başlat ---
+# --- Uygulama başlat ---
 if __name__ == '__main__':
-    initialize_app()  # DB ve başlangıç işlemleri
+    initialize_app()
     print("🚀 Flask SocketIO sunucusu başlatılıyor...")
     socketio.run(app, host='0.0.0.0', port=5000, debug=True)
