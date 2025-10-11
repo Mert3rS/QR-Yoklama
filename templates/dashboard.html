@@ -6,24 +6,35 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 <body>
-  <h1>📊 Öğretmen Dashboard</h1>
+  <h1>📊 Öğretmen Paneli</h1>
 
   <p class="welcome">Hoş geldiniz, <strong>admin</strong>!</p>
   <a class="logout-btn" href="{{ url_for('logout') }}">🚪 Çıkış Yap</a>
 
   <h2>🧾 Yoklama Listesi</h2>
+  
   <table>
     <tr>
-      <th>Ad Soyad</th>
-      <th>Saat</th>
+        <th>Ad Soyad</th>
+        <th>Numara</th>
+        <th>Saat</th>
+        <th>İşlem</th>
     </tr>
-    {% for y in yoklama_listesi %}
-      <tr>
-        <td>{{ y.isim }}</td>
-        <td>{{ y.zaman }}</td>
-      </tr>
+    {% for y in attendances %}
+    <tr>
+        <td>{{ y['student_name'] }}</td>
+        <td>{{ y['student_number'] }}</td>
+        <td>{{ y['timestamp'] }}</td>
+        <td>
+            <form method="POST" action="{{ url_for('delete_attendance', id=y['id']) }}">
+                <button type="submit" class="delete-btn">Sil</button>
+            </form>
+        </td>
+    </tr>
     {% endfor %}
   </table>
+
+  <p class="total">Toplam yoklama sayısı: {{ total }}</p>
 
   <br>
   <a href="{{ url_for('index') }}" class="logout-btn" style="background:#1976d2;">← QR Kod Sayfasına Dön</a>

@@ -172,7 +172,12 @@ def teacher_login():
 @teacher_required
 def dashboard():
     conn = get_db()
-    rows = conn.execute("SELECT * FROM attendance ORDER BY timestamp DESC").fetchall()
+    rows = conn.execute("""
+        SELECT a.id, a.student_name, s.student_number, a.timestamp
+        FROM attendance a
+        LEFT JOIN students s ON a.student_id = s.id
+        ORDER BY a.timestamp DESC
+    """).fetchall()
     total = len(rows)
     conn.close()
     return render_template('dashboard.html', attendances=rows, total=total)
