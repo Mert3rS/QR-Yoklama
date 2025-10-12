@@ -212,6 +212,68 @@ def delete_attendance(id):
     flash("Yoklama kaydı silindi.")
     return redirect(url_for('dashboard'))
 
+# --- 👇 Kullanıcı Yönetimi (Liste / Ekle / Düzenle / Sil) ---
+@app.route('/kullanicilar')
+@teacher_required
+def kullanicilar():
+    conn = get_db()
+    kullanicilar = conn.execute("SELECT * FROM students").fetchall()
+    conn.close()
+    return render_template('kullanicilar.html', kullanicilar=kullanicilar)
+
+@app.route('/kullanici_yeni', methods=['GET', 'POST'])
+@teacher_required
+def kullanici_yeni():
+    if request.method == 'POST':
+        ad = request.form['ad']
+        soyad = request.form['soyad']
+        email = request.form['email']
+        sifre = request.form['sifre']
+        sifre_hash = generate_password_hash(sifre)
+        conn = get_db()
+        conn.execute("INSERT INTO students (name, student_number, password_hash) VALUES (?, ?, ?)", 
+                     (f"{ad} {soyad}", email, sifre_hash))
+        conn.commit()
+        conn.close()
+        flash("Yeni kullanıcı eklendi.")
+        return redirect(url_for('kullanicilar'))
+    return render_template('kullanicilar_form.html', kullanici=None)
+
+@app.route('/kullanici_duzenle/<int:id>', methods=['GET', 'POST'])
+@teacher_required
+def kullanici_duzenle(id):
+    conn = get_db()
+    kullanici = conn.execute("SELECT * FROM students WHERE id = ?", (id,)).fetchone()
+    if request.method == 'POST':
+        ad = request.form['ad']
+        soyad = request.form['soyad']
+        email = request.form['email']
+        sifre = request.form['sifre']
+
+        if sifre.strip():
+            sifre_hash = generate_password_hash(sifre)
+            conn.execute("UPDATE students SET name=?, student_number=?, password_hash=? WHERE id=?", 
+                         (f"{ad} {soyad}", email, sifre_hash, id))
+        else:
+            conn.execute("UPDATE students SET name=?, student_number=? WHERE id=?", 
+                         (f"{ad} {soyad}", email, id))
+        conn.commit()
+        conn.close()
+        flash("Kullanıcı bilgileri güncellendi.")
+        return redirect(url_for('kullanicilar'))
+    conn.close()
+    return render_template('kullanicilar_form.html', kullanici=kullanici)
+
+@app.route('/kullanici_sil/<int:id>', methods=['POST'])
+@teacher_required
+def kullanici_sil(id):
+    conn = get_db()
+    conn.execute("DELETE FROM students WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
+    flash("Kullanıcı silindi.")
+    return redirect(url_for('kullanicilar'))
+
 # --- Çıkış ---
 @app.route('/logout')
 def logout():
@@ -229,21 +291,30 @@ def attendance_form():
     qr_base64 = generate_qr(qr_link)
     return render_template('attendance_form.html', name=name, qr_code=qr_base64)
 
+@app.route('/kullanicilar_sil_tumu', methods=['POST'])
+@teacher_required
+def kullanicilar_sil_tumu():
+    conn = get_db()
+    conn.execute("DELETE FROM students")
+    # 🔽 AUTOINCREMENT sayacını da sıfırla
+    conn.execute("DELETE FROM sqlite_sequence WHERE name='students'")
+    conn.commit()
+    conn.close()
+    flash("Tüm kullanıcılar silindi ve ID sıfırlandı.")
+    return redirect(url_for('kullanicilar'))
+
+
+
 # --- QR Okuma ve Yoklama Alma ---
 @app.route('/scan_qr/<int:student_id>')
 def scan_qr(student_id):
-    # Oturum kontrolü kaldırıldı, tablet zaten giriş yapmış durumda
-
-    # DB'den öğrenci bilgilerini al
     conn = get_db()
     row = conn.execute("SELECT name FROM students WHERE id = ?", (student_id,)).fetchone()
     conn.close()
     student_name = row['name'] if row else "Bilinmeyen Öğrenci"
 
-    # Yoklamayı ekle
     total, created = add_attendance(student_id, student_name)
 
-    # Mesaj belirle
     if created:
         message = f"✅ {student_name}, yoklamanız başarıyla alınmıştır."
         success = True

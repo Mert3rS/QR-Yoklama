@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>👥 Kullanıcı Listesi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='kullanicilar.css') }}">
+</head>
+<body>
+    <h1>👥 Kayıtlı Kullanıcılar</h1>
+
+    <a href="{{ url_for('dashboard') }}" class="button">🔙 Geri Dön</a>
+
+    <div style="text-align: right; margin-bottom: 10px;">
+        <form action="{{ url_for('kullanicilar_sil_tumu') }}" method="POST" onsubmit="return confirm('Tüm kullanıcıları silmek istediğine emin misin?');" style="display:inline;">
+            <button type="submit" class="delete-btn1">Hepsini Sil</button>
+        </form>
+    </div>
+    
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Okul Numarası</th>
+                <th>Ad Soyad</th>
+                
+                <th>İşlem</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for k in kullanicilar %}
+            <tr>
+                <td>{{ k[0] }}</td>
+                <td>{{ k[1] }}</td>
+                <td>{{ k[2] }}</td>
+                
+                <td>
+                    <form action="{{ url_for('kullanici_sil', id=k['id']) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="delete-btn" onclick="return confirm('Silmek istediğine emin misin?')">Sil</button>
+                    </form>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

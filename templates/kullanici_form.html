@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Kullanıcı Ekle / Düzenle</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+    <h1>{{ 'Kullanıcı Düzenle' if kullanici else 'Yeni Kullanıcı Ekle' }}</h1>
+
+    <form method="POST">
+        <label>Ad:</label><br>
+        <input type="text" name="ad" value="{{ kullanici[1] if kullanici else '' }}" required><br>
+
+        <label>Soyad:</label><br>
+        <input type="text" name="soyad" value="{{ kullanici[2] if kullanici else '' }}" required><br>
+
+        <label>Email:</label><br>
+        <input type="email" name="email" value="{{ kullanici[3] if kullanici else '' }}" required><br>
+
+        <label>Şifre:</label><br>
+        <input type="password" name="sifre" placeholder="{{ 'Yeni şifre gir (isteğe bağlı)' if kullanici else 'Şifre gir' }}"><br>
+
+        <button type="submit">Kaydet</button>
+        <a href="{{ url_for('kullanicilar') }}" class="button">İptal</a>
+    </form>
+</body>
+</html>

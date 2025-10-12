@@ -5,16 +5,38 @@
   <title>📊 Öğretmen Paneli</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
   <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
-
+  <style>
+    nav {
+      background-color: #1976d2;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: bold;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <h1>📊 Öğretmen Paneli</h1>
 
   <p class="welcome">Hoş geldiniz, <strong>admin</strong>!</p>
-  <a class="logout-btn" href="{{ url_for('logout') }}">🚪 Çıkış Yap</a>
+
+  <!-- 🧭 Üst Menü -->
+  <nav>
+    <a href="{{ url_for('kullanicilar') }}">👩‍🎓 Öğrenci Listesi</a>
+    <a href="{{ url_for('logout') }}">🚪 Çıkış Yap</a>
+  </nav>
 
   <h2>🧾 Yoklama Listesi</h2>
-  
+
   <table>
     <tr>
         <th>Ad Soyad</th>
