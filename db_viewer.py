@@ -24,10 +24,11 @@ else:
 
 # Yoklama kayıtları
 attendance_df = pd.read_sql_query("""
-    SELECT a.id, a.student_name, s.student_number, a.timestamp
+    SELECT a.id, a.student_name, s.student_number, a.timestamp, a.ip_address
     FROM attendance a
     LEFT JOIN students s ON a.student_id = s.id
 """, conn)
+
 print("\n=== Yoklamalar ===")
 if attendance_df.empty:
     print("Henüz yoklama kaydı yok.")

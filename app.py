@@ -36,6 +36,7 @@ def init_db():
             student_id INTEGER,
             student_name TEXT NOT NULL,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+            ip_address TEXT,
             FOREIGN KEY(student_id) REFERENCES students(id)
         );
     """)
@@ -69,6 +70,8 @@ def add_attendance(student_id, student_name):
     conn = get_db()
     c = conn.cursor()
     today = date.today().isoformat()
+
+    # Aynı gün iki kez yoklama alınmasın
     c.execute("SELECT COUNT(*) FROM attendance WHERE student_id = ? AND date(timestamp) = ?", (student_id, today))
     already = c.fetchone()[0]
 
@@ -78,7 +81,12 @@ def add_attendance(student_id, student_name):
         socketio.emit("update_count", {"count": total})
         return total, False
 
-    c.execute("INSERT INTO attendance (student_id, student_name) VALUES (?, ?)", (student_id, student_name))
+    ip_address = request.remote_addr
+
+    c.execute(
+        "INSERT INTO attendance (student_id, student_name, ip_address) VALUES (?, ?, ?)",
+        (student_id, student_name, ip_address)
+    )
     conn.commit()
     total = c.execute("SELECT COUNT(*) FROM attendance").fetchone()[0]
     conn.close()
@@ -95,7 +103,7 @@ def generate_qr(url):
 # --- Ana Sayfa ---
 @app.route('/')
 def index():
-    qr_base64 = generate_qr(f"{NGROK_URL}/attendance")
+    qr_base64 = generate_qr(f"{NGROK_URL}/attendance_form")
     conn = get_db()
     count = conn.execute("SELECT COUNT(*) FROM attendance").fetchone()[0]
     conn.close()
@@ -122,17 +130,19 @@ def register():
             )
             conn.commit()
             conn.close()
-            flash("Kayıt başarılı. Giriş yapabilirsiniz.")
+            
+            flash("Kayıt başarılı. Lütfen giriş yapın.")
             return redirect(url_for('login'))
         except sqlite3.IntegrityError:
             flash("Bu öğrenci numarası zaten kayıtlı.")
             return redirect(url_for('register'))
+    
     return render_template('register.html')
 
 # --- Öğrenci Giriş ---
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    next_url = request.args.get('next') or url_for('index')
+    next_url = request.args.get('next') or url_for('attendance_form')
     if request.method == 'POST':
         student_number = request.form.get('student_number', '').strip()
         password = request.form.get('password', '')
@@ -145,7 +155,7 @@ def login():
             session['student_number'] = row['student_number']
             session['name'] = row['name']
             flash("Giriş başarılı.")
-            return redirect(request.form.get('next') or url_for('attendance'))
+            return redirect(request.form.get('next') or url_for('attendance_form'))
 
         flash("Kullanıcı adı veya şifre hatalı.")
         return redirect(url_for('login', next=next_url))
@@ -173,7 +183,7 @@ def teacher_login():
 def dashboard():
     conn = get_db()
     rows = conn.execute("""
-        SELECT a.id, a.student_name, s.student_number, a.timestamp
+        SELECT a.id, a.student_name, s.student_number, a.timestamp, a.ip_address
         FROM attendance a
         LEFT JOIN students s ON a.student_id = s.id
         ORDER BY a.timestamp DESC
@@ -200,10 +210,10 @@ def logout():
     flash("Çıkış yapıldı.")
     return redirect(url_for('index'))
 
-# --- Yoklama ---
-@app.route('/attendance', methods=['GET', 'POST'])
+# --- Yoklama Formu ---
+@app.route('/attendance_form', methods=['GET', 'POST'])
 @login_required
-def attendance():
+def attendance_form():
     message = None
     success = False
     student_id = session['user_id']
