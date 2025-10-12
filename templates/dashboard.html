@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <title>📊 Öğretmen Paneli</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
+
 </head>
 <body>
   <h1>📊 Öğretmen Paneli</h1>
@@ -39,6 +41,6 @@
   <p class="total">Toplam yoklama sayısı: {{ total }}</p>
 
   <br>
-  <a href="{{ url_for('index') }}" class="logout-btn" style="background:#1976d2;">← QR Kod Sayfasına Dön</a>
+  <a href="{{ url_for('index') }}" class="logout-btn" style="background:#1976d2;">← Anasayfaya Dön</a>
 </body>
 </html>

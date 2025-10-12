@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}QR Yoklama Sistemi{% endblock %}</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='img/logoktu.jpg') }}">
+
+    <!-- Ortak CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='attendance.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='qr_success.css') }}">
+
+    <!-- Ek blok: Sayfaya özel ek head içeriği -->
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <!-- Flash mesajlar -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class="messages">
+          {% for msg in messages %}
+            <li>{{ msg }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Sayfa içerikleri buraya gelecek -->
+    {% block content %}{% endblock %}
+
+</body>
+</html>

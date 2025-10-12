@@ -39,22 +39,60 @@ h1 {
     font-weight: 500;
 }
 
-/* Linkler */
+/* Linkler (buton tarzında) */
 .links {
     margin-bottom: 40px;
-    font-size: 1.2rem;
-}
-
-.links a {
-    color: #3498db;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .links a {
+    position: relative;
+    display: inline-block;
+    padding: 12px 28px;
+    font-size: 1.1rem;
     font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #3498db, #2980b9);
+    border-radius: 30px;
     text-decoration: none;
-    margin: 0 15px;
-}
-
-.links a:hover {
-    text-decoration: underline;
-}
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Hover efekti */
+  .links a:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(52, 152, 219, 0.4);
+  }
+  
+  /* Animasyonlu arka plan efekti */
+  .links a::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.25);
+    transition: left 0.4s ease;
+  }
+  
+  .links a:hover::before {
+    left: 100%;
+  }
+  
+  /* Mobil uyumluluk */
+  @media (max-width: 600px) {
+    .links a {
+      width: 80%;
+      text-align: center;
+    }
+  }
+  
 
 /* QR kod container */
 .qr {
@@ -88,7 +126,7 @@ h2 {
 
 /* Genel paragraf */
 p {
-    font-size: 1rem;
+    font-size: 24px;
     color: #2c3e50;
     text-align: center;
 }
@@ -98,3 +136,13 @@ p {
     font-weight: 700;
     color: #2c3e50;
 }
+.logo img {
+    width: 251px;
+    height: auto;
+    display: block;
+    margin: 25px auto;
+    border-radius: 50%; /* Daire içine alır */
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+
+  }
+  

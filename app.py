@@ -3,12 +3,13 @@ import qrcode, io, base64, sqlite3, os
 from flask_socketio import SocketIO
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
-from datetime import date
+from datetime import date, datetime, timedelta
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_change_this")
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
+# NGROK URL'si
 NGROK_URL = os.environ.get("NGROK_URL", "https://hammeringly-unenquired-coralee.ngrok-free.dev")
 DB_PATH = "database/attendance.db"
 
@@ -82,7 +83,6 @@ def add_attendance(student_id, student_name):
         return total, False
 
     ip_address = request.remote_addr
-
     c.execute(
         "INSERT INTO attendance (student_id, student_name, ip_address) VALUES (?, ?, ?)",
         (student_id, student_name, ip_address)
@@ -188,9 +188,18 @@ def dashboard():
         LEFT JOIN students s ON a.student_id = s.id
         ORDER BY a.timestamp DESC
     """).fetchall()
-    total = len(rows)
+    
+    adjusted_rows = []
+    for row in rows:
+        utc_time = datetime.strptime(row['timestamp'], "%Y-%m-%d %H:%M:%S")
+        local_time = utc_time + timedelta(hours=3)
+        row_dict = dict(row)
+        row_dict['timestamp'] = local_time.strftime("%Y-%m-%d %H:%M:%S")
+        adjusted_rows.append(row_dict)
+
+    total = len(adjusted_rows)
     conn.close()
-    return render_template('dashboard.html', attendances=rows, total=total)
+    return render_template('dashboard.html', attendances=adjusted_rows, total=total)
 
 # --- Kayıt Silme ---
 @app.route('/delete_attendance/<int:id>', methods=['POST'])
@@ -211,28 +220,38 @@ def logout():
     return redirect(url_for('index'))
 
 # --- Yoklama Formu ---
-@app.route('/attendance_form', methods=['GET', 'POST'])
+@app.route('/attendance_form')
 @login_required
 def attendance_form():
-    message = None
-    success = False
     student_id = session['user_id']
     name = session.get('name') or session.get('student_number')
+    qr_link = f"{NGROK_URL}/scan_qr/{student_id}"
+    qr_base64 = generate_qr(qr_link)
+    return render_template('attendance_form.html', name=name, qr_code=qr_base64)
 
-    if request.method == 'POST':
-        total, created = add_attendance(student_id, name)
-        if created:
-            message = f"✅ {name} için yoklama alındı! Toplam: {total}"
-            success = True
-        else:
-            message = f"⚠️ {name} için zaten bugün yoklama alınmış. Toplam: {total}"
+# --- QR Okuma ve Yoklama Alma ---
+@app.route('/scan_qr/<int:student_id>')
+def scan_qr(student_id):
+    # Oturum kontrolü kaldırıldı, tablet zaten giriş yapmış durumda
 
-    return render_template(
-        'attendance_form.html',
-        name=name,
-        message=message,
-        success=success
-    )
+    # DB'den öğrenci bilgilerini al
+    conn = get_db()
+    row = conn.execute("SELECT name FROM students WHERE id = ?", (student_id,)).fetchone()
+    conn.close()
+    student_name = row['name'] if row else "Bilinmeyen Öğrenci"
+
+    # Yoklamayı ekle
+    total, created = add_attendance(student_id, student_name)
+
+    # Mesaj belirle
+    if created:
+        message = f"✅ {student_name}, yoklamanız başarıyla alınmıştır."
+        success = True
+    else:
+        message = f"⚠️ {student_name}, bugün zaten yoklama vermişsiniz."
+        success = False
+
+    return render_template('qr_success.html', message=message, success=success, name=student_name)
 
 # --- Uygulama başlat ---
 if __name__ == '__main__':

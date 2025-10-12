@@ -1,0 +1,69 @@
+/* --- Body ve genel tema --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(to right, #f5f7fa, #c3cfe2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container */
+.container {
+    background-color: rgba(255,255,255,0.95);
+    padding: 40px 50px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    text-align: center;
+    max-width: 400px;
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+/* İkon */
+.icon {
+    font-size: 70px;
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+.icon:hover {
+    transform: scale(1.1);
+}
+
+/* Başlık */
+h1 {
+    font-size: 28px;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+/* Mesaj */
+p.message {
+    font-size: 18px;
+    color: #34495e;
+    margin-bottom: 25px;
+    line-height: 1.4;
+}
+
+/* Geri sayım */
+p.timer {
+    font-size: 14px;
+    color: #636e72;
+}
+
+/* Başarı ve hata ikon renkleri */
+.success-icon {
+    color: #2ecc71; /* yeşil */
+}
+
+.error-icon {
+    color: #e74c3c; /* kırmızı */
+}
+
+/* Animasyon efekti */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px);}
+    to { opacity: 1; transform: translateY(0);}
+}

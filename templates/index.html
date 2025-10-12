@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <title>📋 Yoklama QR Kodu</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.min.js"></script>
 </head>
 <body>
@@ -13,18 +14,20 @@
       <ul class="messages">{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
     {% endif %}
   {% endwith %}
-  
+
+  <div class="logo">
+    <img src="{{ url_for('static', filename='anasayfalogo.png') }}" alt="KTÜ Logo">
+  </div>
+   <br><br>
   <div class="links">
     <a href="{{ url_for('login') }}">Öğrenci Giriş</a>
     <a href="{{ url_for('teacher_login') }}">Öğretmen Giriş</a>
     <a href="{{ url_for('register') }}">Kayıt Ol</a>
   </div>
 
-  <div class="qr">
-    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
-  </div>
 
-  <p>QR kod tarandığında telefon / tarayıcıda kullanıcı önce giriş yapmamışsa <strong>giriş sayfasına</strong> yönlenir.</p>
+
+  <p>Öğrenci Girişi yapıldıktan sonra <strong> QR kodunuzu</strong> okutabilirisiniz.</p>
 
   <h2>Toplam Yoklama: <span id="count">{{ count }}</span></h2>
 

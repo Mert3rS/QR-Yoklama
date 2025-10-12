@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Yoklama Durumu</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='qr_success.css') }}">
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
+
+  <script>
+    let countdown = 5;
+    const timerEl = () => document.getElementById("countdown");
+    const interval = setInterval(() => {
+      if (countdown <= 0) {
+        clearInterval(interval);
+        window.location.href = "/";
+      } else {
+        timerEl().innerText = countdown;
+        countdown--;
+      }
+    }, 1000);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <div class="icon">
+      {% if success %}
+        <span class="success-icon">✅</span>
+      {% else %}
+        <span class="error-icon">⚠️</span>
+      {% endif %}
+    </div>
+    <h1>{{ name }}</h1>
+    <p class="message">{{ message }}</p>
+    <p class="timer">Ana sayfaya yönlendiriliyorsunuz... <span id="countdown">5</span> saniye</p>
+  </div>
+</body>
+</html>
