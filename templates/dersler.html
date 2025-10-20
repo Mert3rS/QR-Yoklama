@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>📚 Ders Seçimi</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dersler.css') }}">
+</head>
+<body>
+    <h1>📚 Ders Seçimi</h1>
+    <p>Hoş geldin, <strong>{{ session.get('name', 'Öğrenci') }}</strong></p>
+
+    <!-- Flash mesajlarını göster -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-container">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <div class="ders-container">
+        {% for d in dersler %}
+        <div class="ders-karti">
+            <h2>{{ d.ad }}</h2>
+            <p><strong>👨‍🏫 Hoca:</strong> {{ d.hoca }}</p>
+            <p><strong>⏰ Saat:</strong> {{ d.saat }}</p>
+
+            {% if d.aktif %}
+                <form action="{{ url_for('attendance_form') }}" method="get">
+                    <input type="hidden" name="ders_id" value="{{ d.id }}">
+                    <button type="submit" class="yoklama-btn">📋 Yoklama Ver</button>
+                </form>
+            {% else %}
+                <button class="yoklama-btn disabled" disabled>⏳ Şu an yoklama zamanı değil</button>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{ url_for('dashboard') }}" class="back-btn">🔙 Geri Dön</a>
+</body>
+</html>

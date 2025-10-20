@@ -223,3 +223,18 @@ input[type="text"]:focus, input[type="password"]:focus {
 .logout-btn:hover {
     background: #8e0000;
 }
+/* Yoklama Durumu */
+.attendance-status {
+    text-align: center;
+    font-size: 18px;
+}
+
+.status.success {
+    color: #28a745; /* yeşil */
+    font-weight: bold;
+}
+
+.status.fail {
+    color: #dc3545; /* kırmızı */
+    font-weight: bold;
+}

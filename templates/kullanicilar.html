@@ -15,7 +15,6 @@
             <button type="submit" class="delete-btn1">Hepsini Sil</button>
         </form>
     </div>
-    
 
     <table>
         <thead>
@@ -23,22 +22,31 @@
                 <th>ID</th>
                 <th>Okul Numarası</th>
                 <th>Ad Soyad</th>
-                
+                <th>Geldi/Gelmedi</th> <!-- Yeni başlık eklendi -->
                 <th>İşlem</th>
             </tr>
         </thead>
         <tbody>
             {% for k in kullanicilar %}
             <tr>
-                <td>{{ k[0] }}</td>
-                <td>{{ k[1] }}</td>
-                <td>{{ k[2] }}</td>
+                <td>{{ k['id'] }}</td>
+                <td>{{ k['student_number'] }}</td>
+                <td>{{ k['name'] }}</td>
                 
+                <!-- Yoklama durumu -->
+                <td class="attendance-status">
+                    {% if k.attendance %}
+                        <span class="status success">✔️</span>
+                    {% else %}
+                        <span class="status fail">❌</span>
+                    {% endif %}
+                </td>
+
+                <!-- Sil butonu -->
                 <td>
                     <form action="{{ url_for('kullanici_sil', id=k['id']) }}" method="POST" style="display:inline;">
                         <button type="submit" class="delete-btn" onclick="return confirm('Silmek istediğine emin misin?')">Sil</button>
                     </form>
-
                 </td>
             </tr>
             {% endfor %}
