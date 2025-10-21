@@ -1,16 +1,21 @@
 <!doctype html>
 <html>
-<head><meta charset="utf-8"><title>Giriş</title></head>
-<link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
-<link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
-
+<head>
+  <meta charset="utf-8">
+  <title>Giriş</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='login.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='back-btn.css') }}">
+  <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
+</head>
 <body>
   <h1>Giriş</h1>
+
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul class="messages">{% for m in messages %}<li>{{ m }}</li>{% endfor %}</ul>
     {% endif %}
   {% endwith %}
+
   <form method="post" action="{{ url_for('login') }}">
     <input type="hidden" name="next" value="{{ next }}">
 
@@ -23,10 +28,13 @@
         <label>Şifre:</label>
         <input type="password" name="password" required>
     </div>
-
+    
     <button type="submit">Giriş</button>
-</form>
+  </form>
 
   <p>Hesap yok mu? <a href="{{ url_for('register') }}">Kayıt ol</a></p>
+
+  <!-- Anasayfaya Dön Butonu -->
+  <a href="{{ url_for('index') }}" class="back-btn">⬅️ Anasayfaya Dön</a>
 </body>
 </html>

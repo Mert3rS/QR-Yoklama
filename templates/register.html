@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <title>Kayıt Ol</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='back-btn.css') }}">
   <link rel="icon" type="image/jpeg" href="{{ url_for('static', filename='logoktu.jpg') }}">
-
 </head>
 <body>
   <h1>Kayıt Ol</h1>
@@ -36,5 +36,8 @@
   </form>
 
   <p>Zaten hesabın var mı? <a href="{{ url_for('login') }}">Giriş Yap</a></p>
+
+  <!-- Anasayfaya Dön Butonu -->
+  <a href="{{ url_for('index') }}" class="back-btn">⬅️ Anasayfaya Dön</a>
 </body>
 </html>

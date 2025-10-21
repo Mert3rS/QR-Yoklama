@@ -106,20 +106,25 @@ form button:hover {
     transform: scale(1.05);
 }
 
-/* Alt bilgi ve link */
-p {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 1rem;
-    color: #2c3e50;
-}
-
-p a {
-    color: #1f3c88;
+.back-btn {
+    display: inline-block;
+    background-color: #1f3c88; /* Kurumsal mavi */
+    color: white;
     font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 12px;
     text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    font-size: 1rem;
 }
 
-p a:hover {
-    text-decoration: underline;
+.back-btn:hover {
+    background-color: #162d68;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
 }
+
+
+
+

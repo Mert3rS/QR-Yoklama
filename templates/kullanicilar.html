@@ -52,5 +52,29 @@
             {% endfor %}
         </tbody>
     </table>
+
+<button onclick="scrollToTop()" id="scrollTopBtn" title="Yukarı çık">⬆️  </button>
+<script>
+    // Buton elementi
+    const scrollTopBtn = document.getElementById("scrollTopBtn");
+
+    // Sayfa kaydıkça butonu göster/gizle
+    window.onscroll = function() {
+        if (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) {
+            scrollTopBtn.style.display = "block";
+        } else {
+            scrollTopBtn.style.display = "none";
+        }
+    };
+
+    // Yukarı kaydırma işlemi
+    function scrollToTop() {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+</script>
+
 </body>
 </html>

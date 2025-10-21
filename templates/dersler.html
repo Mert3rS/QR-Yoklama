@@ -6,8 +6,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dersler.css') }}">
 </head>
 <body>
+  
     <h1>📚 Ders Seçimi</h1>
     <p>Hoş geldin, <strong>{{ session.get('name', 'Öğrenci') }}</strong></p>
+
+    
 
     <!-- Flash mesajlarını göster -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -39,6 +42,11 @@
         {% endfor %}
     </div>
 
-    <a href="{{ url_for('dashboard') }}" class="back-btn">🔙 Geri Dön</a>
+    <div class="footer-buttons">
+      <a href="{{ url_for('change_password') }}" class="menu-link">🔑 Şifre Değiştir</a>
+      <a href="{{ url_for('logout') }}" class="logout-btn">🚪 Çıkış Yap</a>
+
+  </div>
+
 </body>
 </html>

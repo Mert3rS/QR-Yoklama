@@ -122,3 +122,23 @@ p a {
 p a:hover {
     text-decoration: underline;
 }
+.back-btn {
+    display: inline-block;
+    background-color: #3498db; /* login teması ile uyumlu */
+    color: white;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    font-size: 1rem;
+}
+
+.back-btn:hover {
+    background-color: #1976d2;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.25);
+}
+

@@ -4,6 +4,7 @@ from flask_socketio import SocketIO
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 from datetime import date, datetime, timedelta, time
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("SECRET_KEY", "dev_secret_change_this")
@@ -329,6 +330,36 @@ def logout():
     session.clear()
     flash("Çıkış yapıldı.")
     return redirect(url_for('index'))
+
+@app.route('/change_password', methods=['GET', 'POST'])
+def change_password():
+    # Kullanıcı giriş yaptı mı kontrol et
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Önce giriş yapmalısın!", "warning")
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        current_password = request.form['current_password']
+        new_password = request.form['new_password']
+        confirm_password = request.form['confirm_password']
+
+        conn = get_db()
+        student = conn.execute("SELECT * FROM students WHERE id = ?", (user_id,)).fetchone()
+
+        if not check_password_hash(student['password_hash'], current_password):
+            flash("Mevcut şifre yanlış.", "danger")
+        elif new_password != confirm_password:
+            flash("Yeni şifreler eşleşmiyor.", "warning")
+        else:
+            hashed = generate_password_hash(new_password)
+            conn.execute("UPDATE students SET password_hash = ? WHERE id = ?", (hashed, user_id))
+            conn.commit()
+            flash("Şifre başarıyla güncellendi.", "success")
+            return redirect(url_for('dersler'))
+
+    return render_template('change_password.html')
+
 
 # --- Yoklama Formu ---
 @app.route('/attendance_form')

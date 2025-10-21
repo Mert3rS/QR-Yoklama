@@ -139,4 +139,73 @@ p {
     background: #0d47a1;
     transform: scale(1.05);
 }
+/* === Alt Buton Grubu === */
+.footer-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 40px;
+}
+
+/* Ortak buton stili */
+.footer-buttons a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    color: white;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Geri Dön Butonu */
+.back-btn {
+    background-color: #2196f3;
+}
+.back-btn:hover {
+    background-color: #1976d2;
+    transform: translateY(-2px);
+}
+
+/* Anasayfa Butonu */
+.home-btn {
+    background-color: #4caf50;
+}
+.home-btn:hover {
+    background-color: #388e3c;
+    transform: translateY(-2px);
+}
+
+/* Çıkış Yap Butonu */
+.logout-btn {
+    background-color: #f44336;
+}
+.logout-btn:hover {
+    background-color: #d32f2f;
+    transform: translateY(-2px);
+}
+.menu-link {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px 0;
+    background-color: #1f3c88; /* Tema rengi */
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.menu-link:hover {
+    background-color: #162d68; /* Hover rengi */
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
 
